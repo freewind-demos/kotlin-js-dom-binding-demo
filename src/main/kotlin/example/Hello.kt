@@ -1,36 +1,49 @@
 package example
 
-import kotlinx.html.*
-import kotlinx.html.dom.*
+import kotlinx.html.INPUT
+import kotlinx.html.div
+import kotlinx.html.dom.create
+import kotlinx.html.id
+import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.textInput
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.Node
 import kotlin.browser.document
-import kotlin.browser.window
 
-
-val myDiv = document.create.div {
-    p { +"text inside" }
-}
+private val data = Var("abc")
 
 fun main(args: Array<String>) {
-    document.body?.append(myDiv)
-    appendRepeat()
+    document.body?.append(createMyDiv())
 }
 
-fun appendRepeat() {
-    window.setInterval({
-        val myDiv = document.create.div("panel") {
-            p {
-                +"Here is "
-                a("http://kotlinlang.org") { +"official Kotlin site" }
-            }
+fun createMyDiv(): Node {
+    return document.create.div {
+        div {
+            textInput { this.bindValue(data) }
         }
-
-        val container = document.getElementById("container")
-        container?.appendChild(myDiv)
-        container?.append {
-            div {
-                +"added it"
-            }
+        div {
+            textInput { this.bindValue(data) }
         }
-    }, 1000)
+    }
 }
 
+private fun INPUT.bindValue(data: Var<String>) {
+    val nodeId = nextId()
+    this.id = nodeId
+    fun self() = document.getElementById(nodeId) as HTMLInputElement
+    data.addListener { newValue ->
+        document.getElementById(nodeId)?.run {
+            self().value = newValue
+        } ?: run {
+            this.value = newValue
+        }
+    }
+    this.onKeyUpFunction = { _ -> data.set(self().value) }
+}
+
+private var id = 0
+private fun nextId(): String {
+    return "var-$id".also {
+        id += 1
+    }
+}

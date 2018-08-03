@@ -1,7 +1,9 @@
-Kotlinx Demo
+Kotlinx DOM Binding Demo
 ========================
 
-[kotlinx](https://github.com/Kotlin/kotlinx.html) demo.
+手动实现页面中两个`textInput`之间双向绑定。好像比想象中简单很多。
+
+其中的DOM部分是由[kotlinx](https://github.com/Kotlin/kotlinx.html)生成。
 
 ```
 npm install
@@ -9,4 +11,4 @@ npm install
 open index.html
 ```
 
-You will see generated html content in page.
+在页面上，当你在某一个textInput中输入，则另一个也会跟着变。
